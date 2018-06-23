@@ -1,25 +1,39 @@
-// YOUR CODE HERE:
-$( document ).ready(function() {
-  //Dyamically create dropdown
-  
+$( document ).ready(function() { 
+ 
+   // $('#chats').append(`
+   //    <div>
+   //    <div class="messages">${'hey'}</div>
+   //    <div class="username">${storageUsername}</div>
+   //    <div class="roomname">${storageRoomname}</div>
+   //  </div>`)
+
+
   $('.mySelect').change( () => {
-    let slectedText = $('#chats').val();
+    let selectedText = $('#chats').val();
   })
+
 });
 
 class App {
-  constructor() {
+  constructor(message) {
     this.server = 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages';
-    this.addedData = ''  
+    this.addedData = '';
+    this.message = message;
 }
   
   init() {
-    $('#chats').append('hi')
+    // $('#chats').append('hi')
+    $('#chats').append(`
+      <div>
+      <div class="messages">${this.text}</div>
+      <div class="username">${this.username}</div>
+      <div class="roomname">${this.roomname}</div>
+    </div>`)
   }
 
   send(message) {
     $.ajax({
-      type: "POST",
+      type: 'POST',
       url: this.server,
       data: JSON.stringify(message),
       contentType: 'application/json',
@@ -34,15 +48,13 @@ class App {
 
   fetch(message) {
     $.ajax({
-      type: "GET",
+      type: 'GET',
       url: this.server,
       data: JSON.stringify(message),
       contentType: 'application/json',
+      //console.log(data)
       success: function (data) {
         console.log('chatterbox: Message received', data);
-        
-        $('body').append(data)
-
       },
       error: function (data) {
         console.error('chatterbox: Failed to receive message', data);
@@ -51,11 +63,10 @@ class App {
   }
 
   clearMessages() {
-    $('#chats').html('');
+    $('#chats').empty();
   }
 
   renderMessage(message) {
-    $('#chats').html(`<div class='messages'>${message}</div>`);
    
   }
   
@@ -67,7 +78,6 @@ class App {
 
   handleUsernameClick() {
     $('#main').on('click', function() {
-      
     })
   }
 
@@ -75,6 +85,7 @@ class App {
   };
   
 }
+
 const app = new App();
 
 
