@@ -1,16 +1,21 @@
 // YOUR CODE HERE:
 $( document ).ready(function() {
-  var data = $.get('http://parse.sfm8.hackreactor.com/chatterbox/classes/messages')
+  //Dyamically create dropdown
   
+  $('.mySelect').change( () => {
+    let slectedText = $('#chats').val();
+  })
 });
-
 
 class App {
   constructor() {
-    this.server = 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages'
+    this.server = 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages';
+    this.addedData = ''  
+}
+  
+  init() {
+    $('#chats').append('hi')
   }
-
-  init() {};
 
   send(message) {
     $.ajax({
@@ -25,36 +30,53 @@ class App {
         console.error('chatterbox: Failed to send message', data);
       }
     });
-  };
+  }
 
-  fetch() {
-   $.ajax({
+  fetch(message) {
+    $.ajax({
       type: "GET",
       url: this.server,
       data: JSON.stringify(message),
       contentType: 'application/json',
       success: function (data) {
         console.log('chatterbox: Message received', data);
+        
+        $('body').append(data)
+
       },
       error: function (data) {
         console.error('chatterbox: Failed to receive message', data);
       }
     });  
-  };
+  }
 
   clearMessages() {
-    $('#chats').html('')
-  };
+    $('#chats').html('');
+  }
 
   renderMessage(message) {
-    $('#chats').html('<div>message</div>');
-  };
+    $('#chats').html(`<div class='messages'>${message}</div>`);
+   
+  }
   
   renderRoom(rooms) {
-    $('#roomSelect').append('<div>rooms</div>')
+    $('#roomSelect').append($('<options>', {
+      text: room_names
+    }));
+  }
+
+  handleUsernameClick() {
+    $('#main').on('click', function() {
+      
+    })
+  }
+
+  handleSubmit() {
   };
+  
 }
 const app = new App();
+
 
 
 
