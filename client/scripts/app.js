@@ -1,13 +1,19 @@
+var storage;
+
 $( document ).ready(function() { 
+   
+  app.fetch();
+  setTimeout(function() {
+  for (var i = 10; i < 100; i++) {
+      $('#chats').append(`
+      <div class="chat">
+        <div class="username">${storage.results[i].username}</div>
+        <div>${storage.results[i].text}</div>
+      </div>`)
  
-   // $('#chats').append(`
-   //    <div>
-   //    <div class="messages">${'hey'}</div>
-   //    <div class="username">${storageUsername}</div>
-   //    <div class="roomname">${storageRoomname}</div>
-   //  </div>`)
-
-
+    }
+ },2000)
+  
   $('.mySelect').change( () => {
     let selectedText = $('#chats').val();
   })
@@ -19,22 +25,15 @@ class App {
     this.server = 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages';
     this.addedData = '';
     this.message = message;
-}
+  }
   
   init() {
-    // $('#chats').append('hi')
-    $('#chats').append(`
-      <div>
-      <div class="messages">${this.text}</div>
-      <div class="username">${this.username}</div>
-      <div class="roomname">${this.roomname}</div>
-    </div>`)
   }
 
   send(message) {
     $.ajax({
       type: 'POST',
-      url: this.server,
+      url: this.server              ,
       data: JSON.stringify(message),
       contentType: 'application/json',
       success: function (data) {
@@ -52,14 +51,14 @@ class App {
       url: this.server,
       data: JSON.stringify(message),
       contentType: 'application/json',
-      //console.log(data)
       success: function (data) {
         console.log('chatterbox: Message received', data);
+        storage = data;
       },
       error: function (data) {
         console.error('chatterbox: Failed to receive message', data);
       }
-    });  
+    }); 
   }
 
   clearMessages() {
@@ -67,12 +66,12 @@ class App {
   }
 
   renderMessage(message) {
-   
+    $('#chats').append(`<div class="messages">${message}</div>`)
   }
   
   renderRoom(rooms) {
     $('#roomSelect').append($('<options>', {
-      text: room_names
+      text: ''
     }));
   }
 
