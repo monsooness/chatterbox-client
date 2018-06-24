@@ -1,19 +1,19 @@
 var storage;
 
 $( document ).ready(function() { 
-   
-  app.fetch();
-  setTimeout(function() {
-  for (var i = 10; i < 100; i++) {
-      $('#chats').append(`
-      <div class="chat">
-        <div class="username">${storage.results[i].username}</div>
-        <div>${storage.results[i].text}</div>
-      </div>`)
- 
-    }
- },2000)
+  app.fetch()
   
+
+$('.button').on('submit', function(text) {
+  
+  var text = {
+  username: this.username,
+  text: '',
+  roomname: ''
+  }
+  app.send(text);
+  console.log(this.text.val())
+})
   $('.mySelect').change( () => {
     let selectedText = $('#chats').val();
   })
@@ -21,13 +21,8 @@ $( document ).ready(function() {
 });
 
 class App {
-  constructor(message) {
+  constructor() {
     this.server = 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages';
-    this.addedData = '';
-    this.message = message;
-  }
-  
-  init() {
   }
 
   send(message) {
@@ -43,6 +38,7 @@ class App {
         console.error('chatterbox: Failed to send message', data);
       }
     });
+
   }
 
   fetch(message) {
@@ -53,12 +49,32 @@ class App {
       contentType: 'application/json',
       success: function (data) {
         console.log('chatterbox: Message received', data);
-        storage = data;
+        app.init(data)
       },
       error: function (data) {
         console.error('chatterbox: Failed to receive message', data);
       }
     }); 
+  }
+
+  init(data) {
+    for (var i = 0; i < data.results.length; i++) {
+      $('#chats').append(`
+      <div class="chat">
+        <div class="username">${data.results[i].username}</div>
+        <div>${data.results[i].text}</div>
+      </div>`)  
+    }
+
+    // var dateArray
+    // for (var j = 0; j < data.results.length; j++) {
+
+    // console.log(data.results[j])
+    //   data.results[j].sort(function(a, b) {
+    //     return b.createdAt - a.createdAt;
+    //   console.log(data.results[i].createdAt)
+    //   })
+    // }     
   }
 
   clearMessages() {
